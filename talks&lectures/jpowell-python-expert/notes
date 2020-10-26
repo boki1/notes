@@ -1,0 +1,5 @@
+Most important lesson:
+
+top level function/syntax                       ->                a corresponding __function__
+	e.g                                                                      (dunder method, or data model; check https://docs.python.org/3/reference/datamodel.html) 
+	+, -, repr(), len(), etc.
