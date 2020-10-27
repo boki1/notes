@@ -1,6 +1,6 @@
-Strategy Pattern
---------------------------
+# Strategy Pattern
 
+#### Introduction
 - one of the simplest patterns
 - using composition rather than inheritance;
 understanding that inheritance is not suitable for code reuse
@@ -11,8 +11,7 @@ understanding that inheritance is not suitable for code reuse
 
 Think about a collection. If it has a sorting algorithm implemented in it. Then the sorting algorithm cannot be changed easily, but if we decouple the sorting algorithm from the collection implementation we can plug-and-play with different algorithms for sorting.
 
-Example
-------------------
+#### Example
 
 Assume there is a base class `Duck`. There are two subclasses which inherit from the base - `WildDuck` and `CityDuck`. The subclasses are responsible for the implementation of the `display()` method and the implementation of `quach()` is shared for all subclasses. But let's say there is also a static method `fly()` and after some time of using the system as it is, a new subclass is added - a `RubberDuck`. And it has a derived implementation of `fly()`... And after that a new subclass appears - a `MountainDuck`, and this type of duck has a different type of flying behaviour. And after that another duck is added and it has the same flying behaviour. Well, now the need for a class about the flying behaviour becomes obvious. 
 
@@ -22,8 +21,7 @@ The problem in a nutshell here is this: if we have a common behaviour shared in 
 
 If we cannot create a hierarchical solution in order to share code (_inheritance_), we need to extract (composition) the algorithms and use the subclasses as clients.
 
-Solution
-----------------------
+#### Solution
 
 Each `Duck` derived class is a client. They make use of different algorithms for `quach`-ing and `fly`-ing.
 
@@ -33,6 +31,7 @@ Here 'is-a' is used and not 'has-a', meaning that each `Duck` derived _must_ hav
 
 **NB:** A good naming convention for this pattern may be used: e.g. instead of `IQuachBehaviour`, `QuachStrategy` may be used in order to help the developer notice the design pattern used in the specific case.
 
-Diagram
---------------
+---
+#### Diagram
+
 ![Diagram for the strategy pattern](../../.imgs/strategy-pattern.png)

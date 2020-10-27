@@ -23,3 +23,17 @@ elsys/
 talks\&lectures/ht6/
 # talks&lectures dir END
 
+
+# Any junk files/dirs
+
+# Clion
+.idea/
+cmake-build-debug/
+CMakeFiles.txt
+
+# gcc/g++
+a.out
+
+.o
+
+

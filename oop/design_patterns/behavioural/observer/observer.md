@@ -1,7 +1,6 @@
-## Observer Pattern
+# Observer Pattern
 
-Example
------------------------------
+#### Example
 
  Suppose there are two objects. One of them changes state, and the other one _needs_ to now when the first one's state changes. Let's call them A - the observable, and B - the observer.
 
@@ -14,8 +13,7 @@ Example
 
  **Definition:** Observer defines a one-to-many relationship between objects, so that when the observable changes state, all observers are notified and updated automatically.
 
-Interfaces
-----------------
+#### Components
 
 There are 2 base interfaces: `IObservable` and `IObserver`. 
 
@@ -23,20 +21,17 @@ The first one provides 3 basic methods: `addObserver`, `removeObserver` and `not
 
 The second one - `IObserver`, declares the method `update`. The `notifyAll` method in the `IObservable` calls `update` on each observer. This way the specific observer are responsible for whatever they want to do when the state has changed in some way.
 
-Concretions
----------------
+#### Concretion
 
 Let's have 2 subclasses implementing the interfaces just described: `ConcreteObservable` and `ConcreteObserver`. 
 
 To the `ConcreteObservable` should be added some methods such as `SetState`, `GetState`, etc. (This depends on the specific case. Also note that `ConcreteObservable` might be breaking the single-responsibility rule.)
 
-Bonus
----------------
+#### Bonus
 
 One more relationship may be introduced. The `ConcreteObserver` might store a reference to the `ConcreteObservable` which is being observed. This way the `update` method does not need to get as parameter the `IObservable` which has changed state. Also this provides the `ConcreteObserver` with the rights to access the state of the `ConcreteObservable` in order to get specific information about the change of state.
 
-Example
-----------------
+#### Example
 
 Observable - A weather station
 Observer - Displays
@@ -45,6 +40,6 @@ The weather station implements the `IObservable` interface and other then the me
 
 Also, let's say, there are 2 different types of displays - `PhoneDisplay` and `LCDDisplay`, which implement the `IDisplay` interface. And the displays implement `IObserver` as well.
 
-Diagram
------------------
+----
+#### Diagram
 ![The Observer pattern](../../.imgs/observer-pattern.png)
