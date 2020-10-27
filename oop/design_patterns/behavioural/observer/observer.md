@@ -1,8 +1,7 @@
 ## Observer Pattern
 
-- adsf
- Example
- ----------------------------
+Example
+-----------------------------
 
  Suppose there are two objects. One of them changes state, and the other one _needs_ to now when the first one's state changes. Let's call them A - the observable, and B - the observer.
 

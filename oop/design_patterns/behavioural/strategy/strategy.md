@@ -35,4 +35,4 @@ Here 'is-a' is used and not 'has-a', meaning that each `Duck` derived _must_ hav
 
 Diagram
 --------------
-![Diagram for the strategy pattern](../.imgs/strategy-pattern.png)
+![Diagram for the strategy pattern](../../.imgs/strategy-pattern.png)
