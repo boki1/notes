@@ -3,7 +3,8 @@ Prototype Pattern
 
 **Intent**
 
-Specify the kinds of objects to create using a prototypical instance, and create new objects by copying this prototype.
+Specify the kinds of objects to create using a prototypical instance, and create new objects by copying this prototype, without coupling to their specific classes.
+
 
 In short, it allows you to create a copy of an existing object and modify it to your needs, instead of going through the trouble of creating an object from scratch and setting it up.
 

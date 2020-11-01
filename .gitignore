@@ -29,7 +29,7 @@ talks\&lectures/ht6/
 # Clion
 .idea/
 cmake-build-debug/
-CMakeFiles.txt
+CMakeLists.txt
 
 # gcc/g++
 a.out
