@@ -8,9 +8,9 @@ Design patterns
 **Creational patterns**
 - [x] Abstract Factory
 - [x] Builder
-- [ ] Factory Method
-- [ ] Prototype
-- [ ] Singleton
+- [x] Factory Method (no impl yet)
+- [x] Prototype
+- [x] Singleton
 
 **Behavioural patterns**
 - [ ] Chain of Responsibility
