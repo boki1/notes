@@ -12,6 +12,9 @@
 *.cb2
 .*.lb
 
+# rst
+build/
+
 ## Intermediate documents:
 *.dvi
 *.xdv
