@@ -19,7 +19,7 @@
 
 # -- Project information -----------------------------------------------------
 
-project = u'asdf'
+project = u'Notes'
 copyright = u'2021, Kristiyan Stoimenov'
 author = u'Kristiyan Stoimenov'
 
@@ -128,7 +128,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'Notes.tex', u'Notes Documentation',
+    (master_doc, 'Notes.tex', u'Notes',
      u'Kristiyan Stoimenov', 'manual'),
 ]
 
@@ -138,7 +138,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'notes', u'Notes Documentation',
+    (master_doc, 'notes', u'Notes',
      [author], 1)
 ]
 
@@ -149,7 +149,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'Notes', u'Notes Documentation',
+    (master_doc, 'Notes', u'Notes',
      author, 'Notes', 'One line description of project.',
      'Miscellaneous'),
 ]
