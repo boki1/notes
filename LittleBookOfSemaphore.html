@@ -1,0 +1,461 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Little Book Of Semaphores &#8212; Notes  documentation</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet" />
+  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.e2363ea40746bee74734a24ffefccd78.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="The Slab Allocator: An Object Caching Kernel Memory Allocator" href="ObjectCachingKernelSlabAllocator.html" />
+    <link rel="prev" title="Linux Kernel Development" href="LinuxKernelDevelopment_2010.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Notes  documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p class="caption" role="heading">
+ <span class="caption-text">
+  Books
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="LinuxKernelDevelopment_2010.html">
+   Linux Kernel Development
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   The Little Book Of Semaphores
+  </a>
+ </li>
+</ul>
+<p class="caption" role="heading">
+ <span class="caption-text">
+  Papers
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="ObjectCachingKernelSlabAllocator.html">
+   The Slab Allocator: An Object Caching Kernel Memory Allocator
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/LittleBookOfSemaphore.rst.txt"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.rst</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#introduction">
+   Introduction
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#semaphores">
+   Semaphores
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#basic-synchronisation-patterns">
+   Basic Synchronisation Patterns
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#signalling">
+     Signalling
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="the-little-book-of-semaphores">
+<h1>The Little Book Of Semaphores<a class="headerlink" href="#the-little-book-of-semaphores" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<dl class="simple">
+<dt>Sequential</dt><dd><p>Two events happen sequentially if we know the order of their execution</p>
+</dd>
+<dt>Concurrent</dt><dd><p>Two events are concurrent if we cannot tell the order their execution by just looking at the program. We say that they are <strong>non-deterministic</strong>.</p>
+</dd>
+</dl>
+</div>
+<div class="section" id="semaphores">
+<h2>Semaphores<a class="headerlink" href="#semaphores" title="Permalink to this headline">¶</a></h2>
+<p><em>Def.:</em> Semaphore is a special integer with three special properties:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>It may be initialized to any number, but after being constructed the only supported operatios are <em>increment</em> and <em>decrement</em>.</p></li>
+<li><p>When decrementing, if the value drops below 0, the currently executing thread blocks and sleeps until another thread increments the semaphore.</p></li>
+<li><p>When incrementing, if any threads are waiting on the semaphore, one of them gets unblocked.</p></li>
+</ul>
+</div></blockquote>
+<dl class="simple">
+<dt>What the semaphore’s value represents?</dt><dd><ul class="simple">
+<li><p>If positive, then that is the number of threads that may decrement before blocking.</p></li>
+<li><p>If negative, then the absolute value is the number of threads that are waiting on the semaphore.</p></li>
+</ul>
+</dd>
+</dl>
+<p><strong>Operations</strong></p>
+<table class="table">
+<colgroup>
+<col style="width: 19%" />
+<col style="width: 19%" />
+<col style="width: 63%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Up</p></th>
+<th class="head"><p>Down</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>increment</p></td>
+<td><p>decrement</p></td>
+<td><p>What the operations do</p></td>
+</tr>
+<tr class="row-odd"><td><p>signal</p></td>
+<td><p>wait</p></td>
+<td><p>What they are usually used for</p></td>
+</tr>
+<tr class="row-even"><td><p>V</p></td>
+<td><p>P</p></td>
+<td><p>Original names</p></td>
+</tr>
+</tbody>
+</table>
+<p>Some of the advantages of using semaphores over other synchronisation primitives include</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>They impose deliberate constraints</p></li>
+<li><p>Clarity and organization</p></li>
+<li><p>Efficient implementations</p></li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="basic-synchronisation-patterns">
+<h2>Basic Synchronisation Patterns<a class="headerlink" href="#basic-synchronisation-patterns" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="signalling">
+<h3>Signalling<a class="headerlink" href="#signalling" title="Permalink to this headline">¶</a></h3>
+<p><strong>Task: 2-Thread Randezvous</strong>
+For the following pseudo-code, guarantee that the execution order is <cite>A1 &lt; B2 &amp;&amp; B1 &lt; A2</cite>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">Thread</span> <span class="n">A</span><span class="p">:</span>
+<span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">...</span>
+<span class="p">[</span><span class="n">a2</span><span class="p">]</span> <span class="o">...</span>
+
+<span class="o">//</span> <span class="n">Thread</span> <span class="n">B</span><span class="p">:</span>
+<span class="p">[</span><span class="n">b1</span><span class="p">]</span> <span class="o">...</span>
+<span class="p">[</span><span class="n">b2</span><span class="p">]</span> <span class="o">...</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sem</span> <span class="n">b1_done</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">sem</span> <span class="n">a1_done</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+<span class="o">//</span> <span class="n">ThreadA</span><span class="p">:</span>
+<span class="p">[</span><span class="n">a1</span><span class="p">]</span> <span class="o">...</span>
+     <span class="n">b1_done</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+     <span class="n">a1_done</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+<span class="p">[</span><span class="n">a2</span><span class="p">]</span> <span class="o">...</span>
+
+<span class="o">//</span> <span class="n">ThreadB</span><span class="p">:</span>
+<span class="p">[</span><span class="n">b1</span><span class="p">]</span> <span class="o">...</span>
+     <span class="n">b1_done</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+     <span class="n">a1_done</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+<span class="p">[</span><span class="n">b2</span><span class="p">]</span> <span class="o">...</span>
+</pre></div>
+</div>
+<p><strong>Task:</strong>
+Add mutual exclusion to following snipper:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="o">//</span> <span class="n">Thread</span> <span class="n">A</span>
+<span class="n">c</span><span class="o">++</span><span class="p">;</span>
+
+<span class="o">//</span> <span class="n">Thread</span> <span class="n">B</span>
+<span class="n">c</span><span class="o">++</span><span class="p">;</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sem</span> <span class="n">binsem</span><span class="p">{</span><span class="mi">1</span><span class="p">};</span>
+
+<span class="o">//</span> <span class="n">Thread</span> <span class="n">A</span>
+<span class="n">binsem</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+<span class="n">c</span><span class="o">++</span><span class="p">;</span>
+<span class="n">binsem</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+
+<span class="o">//</span> <span class="n">Thread</span> <span class="n">B</span>
+<span class="n">binsem</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+<span class="n">c</span><span class="o">++</span><span class="p">;</span>
+<span class="n">binsem</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><strong>Task: Multiplex</strong>
+Enforce a limit on the amount thread that may execute concurrently in a critical section:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sem</span> <span class="n">s</span><span class="p">{</span><span class="n">THREADS_NR</span><span class="p">};</span>
+
+<span class="o">//</span> <span class="n">Thread</span> <span class="n">_</span>
+<span class="n">s</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+<span class="p">[</span><span class="o">...</span><span class="p">]</span>
+<span class="n">s</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><strong>Task: Randezvous</strong>
+No thread may execute <code class="docutils literal notranslate"><span class="pre">[critical</span> <span class="pre">section]</span></code> before every one has executed <code class="docutils literal notranslate"><span class="pre">[randezvous]</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sem</span> <span class="n">binsem</span><span class="p">{</span><span class="mi">1</span><span class="p">};</span>
+<span class="n">sem</span> <span class="n">barrier</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">u32</span> <span class="n">count_reached</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+<span class="o">//</span> <span class="n">Thread</span> <span class="n">_</span>
+<span class="p">[</span><span class="n">randezvous</span><span class="p">]</span>
+<span class="n">binsem</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">++</span><span class="n">count_reached</span> <span class="o">&gt;=</span> <span class="n">NR_THREADS</span><span class="p">)</span>
+        <span class="n">barrier</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+<span class="n">binsem</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+
+<span class="n">barrier</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+<span class="n">barrier</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+<span class="p">[</span><span class="n">critical</span> <span class="n">section</span><span class="p">]</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The pattern of <code class="docutils literal notranslate"><span class="pre">wait</span></code> and <code class="docutils literal notranslate"><span class="pre">signal</span></code> in rapid succession is called <strong>turnstile</strong>.</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Common source of deadlocks - blocking on semaphore, while holding a mutex.</p>
+</div>
+<p><strong>Task: Auto-locking barrier (also called Two-phase barrier)</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sem</span> <span class="n">binsem</span><span class="p">{</span><span class="mi">1</span><span class="p">};</span>
+<span class="n">sem</span> <span class="n">turnstile_upper</span><span class="p">{</span><span class="mi">1</span><span class="p">};</span>
+<span class="n">sem</span> <span class="n">turnstile_bottom</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">u32</span> <span class="n">count</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+<span class="n">binsem</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">++</span><span class="n">count</span> <span class="o">&gt;=</span> <span class="n">NR_THREADS</span><span class="p">)</span>
+            <span class="n">turnstile_bottom</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+            <span class="n">turnstile_upper</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+<span class="n">binsem</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+
+<span class="n">turnstile_upper</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>         <span class="o">//</span> <span class="n">first</span> <span class="n">turnstile</span>
+<span class="n">turnstile_upper</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+
+<span class="n">binsem</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">--</span><span class="n">count</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="n">turnstile_upper</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+            <span class="n">turnstile_bottom</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+<span class="n">binsem</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+
+<span class="n">turnstile_bottom</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>        <span class="o">//</span> <span class="n">second</span> <span class="n">turnstile</span>
+<span class="n">turnstile_upper</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><strong>Preloaded barrier</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sem</span> <span class="n">turnstile_bottom</span><span class="p">{</span><span class="mi">1</span><span class="p">};</span>
+<span class="n">sem</span> <span class="n">turnstile_upper</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">sem</span> <span class="n">binsem</span><span class="p">{</span><span class="mi">1</span><span class="p">};</span>
+<span class="n">u32</span> <span class="n">count</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+<span class="n">binsem</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+        <span class="k">if</span> <span class="o">++</span><span class="n">count</span> <span class="o">&gt;=</span> <span class="n">NR_THREADS</span>
+            <span class="n">turnstile_upper</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="n">binsem</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+
+<span class="n">turnstile_upper</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+
+<span class="n">binsem</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+        <span class="k">if</span> <span class="o">--</span><span class="n">count</span> <span class="o">&lt;=</span> <span class="mi">0</span>
+            <span class="n">turnstile_bottom</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">n</span><span class="p">);</span>
+<span class="n">binsem</span><span class="o">.</span><span class="n">signal</span><span class="p">();</span>
+
+<span class="n">turnstile_bottom</span><span class="o">.</span><span class="n">wait</span><span class="p">();</span>
+</pre></div>
+</div>
+<p><strong>Task: Ballroom Dancers</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sem</span> <span class="n">leaders</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">sem</span> <span class="n">followers</span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="LinuxKernelDevelopment_2010.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">Linux Kernel Development</p>
+            </div>
+        </a>
+    </div>
+     <div id="next">
+        <a class="right-next" href="ObjectCachingKernelSlabAllocator.html" title="next page">
+            <div class="prevnext-info">
+                <p class="prevnext-label">next</p>
+                <p class="prevnext-title">The Slab Allocator: An Object Caching Kernel Memory Allocator</p>
+            </div>
+            <i class="prevnext-label fas fa-angle-right"></i>
+        </a>
+     </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Kristiyan Stoimenov<br/>
+        
+            &copy; Copyright 2021, Kristiyan Stoimenov.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>

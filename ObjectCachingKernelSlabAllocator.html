@@ -1,0 +1,338 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Slab Allocator: An Object Caching Kernel Memory Allocator &#8212; Notes  documentation</title>
+    
+  <link href="_static/css/theme.css" rel="stylesheet" />
+  <link href="_static/css/index.c5995385ac14fb8791e8eb36b4908be2.css" rel="stylesheet" />
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    
+      
+
+    
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-book-theme.e2363ea40746bee74734a24ffefccd78.css" />
+    
+  <link rel="preload" as="script" href="_static/js/index.1c5a1a01449ed65a7b51.js">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx-book-theme.12a9622fbb08dcb3a2a40b2c02b83a57.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="The Little Book Of Semaphores" href="LittleBookOfSemaphore.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="en" />
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="80">
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<div class="col-12 col-md-3 bd-sidebar site-navigation show" id="site-navigation">
+    
+        <div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+      
+      
+      <h1 class="site-logo" id="site-title">Notes  documentation</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search the docs ..." aria-label="Search the docs ..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        <p class="caption" role="heading">
+ <span class="caption-text">
+  Books
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="LinuxKernelDevelopment_2010.html">
+   Linux Kernel Development
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="LittleBookOfSemaphore.html">
+   The Little Book Of Semaphores
+  </a>
+ </li>
+</ul>
+<p class="caption" role="heading">
+ <span class="caption-text">
+  Papers
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   The Slab Allocator: An Object Caching Kernel Memory Allocator
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav> <!-- To handle the deprecated key -->
+
+<div class="navbar_extra_footer">
+  Theme by the <a href="https://ebp.jupyterbook.org">Executable Book Project</a>
+</div>
+
+</div>
+
+
+          
+
+
+          
+<main class="col py-md-3 pl-md-4 bd-content overflow-auto" role="main">
+    
+    <div class="topbar container-xl fixed-top">
+    <div class="topbar-contents row">
+        <div class="col-12 col-md-3 bd-topbar-whitespace site-navigation show"></div>
+        <div class="col pl-md-4 topbar-main">
+            
+            <button id="navbar-toggler" class="navbar-toggler ml-0" type="button" data-toggle="collapse"
+                data-toggle="tooltip" data-placement="bottom" data-target=".site-navigation" aria-controls="navbar-menu"
+                aria-expanded="true" aria-label="Toggle navigation" aria-controls="site-navigation"
+                title="Toggle navigation" data-toggle="tooltip" data-placement="left">
+                <i class="fas fa-bars"></i>
+                <i class="fas fa-arrow-left"></i>
+                <i class="fas fa-arrow-up"></i>
+            </button>
+            
+            
+<div class="dropdown-buttons-trigger">
+    <button id="dropdown-buttons-trigger" class="btn btn-secondary topbarbtn" aria-label="Download this page"><i
+            class="fas fa-download"></i></button>
+
+    <div class="dropdown-buttons">
+        <!-- ipynb file if we had a myst markdown file -->
+        
+        <!-- Download raw file -->
+        <a class="dropdown-buttons" href="_sources/ObjectCachingKernelSlabAllocator.rst.txt"><button type="button"
+                class="btn btn-secondary topbarbtn" title="Download source file" data-toggle="tooltip"
+                data-placement="left">.rst</button></a>
+        <!-- Download PDF via print -->
+        <button type="button" id="download-print" class="btn btn-secondary topbarbtn" title="Print to PDF"
+            onClick="window.print()" data-toggle="tooltip" data-placement="left">.pdf</button>
+    </div>
+</div>
+
+            <!-- Source interaction buttons -->
+
+            <!-- Full screen (wrap in <a> to have style consistency -->
+
+<a class="full-screen-button"><button type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip"
+        data-placement="bottom" onclick="toggleFullScreen()" aria-label="Fullscreen mode"
+        title="Fullscreen mode"><i
+            class="fas fa-expand"></i></button></a>
+
+            <!-- Launch buttons -->
+
+        </div>
+
+        <!-- Table of contents -->
+        <div class="d-none d-md-block col-md-2 bd-toc show">
+            
+            <div class="tocsection onthispage pt-5 pb-3">
+                <i class="fas fa-list"></i> Contents
+            </div>
+            <nav id="bd-toc-nav" aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#private-implementation">
+   Private Implementation?
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#design">
+   Design
+  </a>
+  <ul class="nav section-nav flex-column">
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#client-perspective">
+     Client Perspective
+    </a>
+   </li>
+   <li class="toc-h3 nav-item toc-entry">
+    <a class="reference internal nav-link" href="#allocator-perspective">
+     Allocator Perspective
+    </a>
+   </li>
+  </ul>
+ </li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+    <div id="main-content" class="row">
+        <div class="col-12 col-md-9 pl-md-3 pr-md-0">
+        
+              <div>
+                
+  <div class="section" id="the-slab-allocator-an-object-caching-kernel-memory-allocator">
+<h1>The Slab Allocator: An Object Caching Kernel Memory Allocator<a class="headerlink" href="#the-slab-allocator-an-object-caching-kernel-memory-allocator" title="Permalink to this headline">¶</a></h1>
+<p><em>Jeff Bonwick, Sun Microsystems</em></p>
+<p>In kernel mode one of the most common operations are allocating and deallocating. Therefore, thay have to be fast. However, usually they include more overhead than needed and thus result in not so good performance. The primary problem in that us related to the construction and destruction of objects on every allocation. This allocator improves the others by maintaining a pool of preallocated and constructed instances, which do not get destroyed on each logical “free”.</p>
+<p>The core mechanism is based on not deallocating object each time, but to just return them to the cache. Thus, on “alloc” the cache will already have constructed and allocated instaces and will be responsible only for returning a pointer to the appropriate one, which minimizes overhead significantly.</p>
+<a class="reference internal image-reference" href="_images/costs.png"><img alt="_images/costs.png" class="align-center" src="_images/costs.png" style="width: 342.5px; height: 111.5px;" /></a>
+<div class="section" id="private-implementation">
+<h2>Private Implementation?<a class="headerlink" href="#private-implementation" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Tension between the global allocator and the private one</p>
+<ul class="simple">
+<li><p>The former wants memory back, whereas the other wants to keep it.</p></li>
+<li><dl class="simple">
+<dt>The private allocator has no insights regarding the state of the global allocator</dt><dd><ul>
+<li><p>For example, whether the global allocator has enough memory for other crucial components</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>The global allocator is not aware of the state of the private and cannot demand it to release its memory when needed</p></li>
+</ul>
+</li>
+<li><p>The private allocator bypasses any debugging and monitoring mechanisms implemented for the global allocator</p></li>
+<li><p>Many solutions for the same problem</p></li>
+</ol>
+</div></blockquote>
+</div>
+<div class="section" id="design">
+<h2>Design<a class="headerlink" href="#design" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="client-perspective">
+<h3>Client Perspective<a class="headerlink" href="#client-perspective" title="Permalink to this headline">¶</a></h3>
+<p>The API consists of two steps - first, create a cache object for objects of type T, and, second - use it to allocate (more like “fetch”) an instance of T.</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span> <span class="nc">cache</span><span class="w"> </span><span class="o">*</span><span class="n">cache_create</span><span class="p">(</span><span class="w"></span>
+<span class="w">        </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">cache_name</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="kt">size_t</span><span class="w"> </span><span class="n">cache_size</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">align</span><span class="p">,</span><span class="w"></span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">ctor</span><span class="p">)(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="p">),</span><span class="w"></span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">dtor</span><span class="p">)(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="p">)</span><span class="w"></span>
+<span class="w">    </span><span class="p">);</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="nf">cache_alloc</span><span class="p">(</span><span class="k">struct</span> <span class="nc">cache</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">flags</span><span class="p">);</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">cache_free</span><span class="p">(</span><span class="k">struct</span> <span class="nc">cache</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buffer</span><span class="p">);</span><span class="w"></span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">cache_destroy</span><span class="p">(</span><span class="k">struct</span> <span class="nc">cache</span><span class="w"> </span><span class="o">*</span><span class="p">);</span><span class="w"></span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="allocator-perspective">
+<h3>Allocator Perspective<a class="headerlink" href="#allocator-perspective" title="Permalink to this headline">¶</a></h3>
+<ul>
+<li><p>The slab allocator is not a monolithic entity, but rather a set of many caches for different object types</p></li>
+<li><p>Each cache maintains its own statistics and locking mechanism - there is no global one</p></li>
+<li><p>The benefit of knowing size of objects which will allocated before-hand results in optimal performace</p></li>
+<li><p>Slabs are the sinle primary unit of caches. Each time a cache needs to <em>actually allocate</em> memory, it gets an entire slab of objects, and when it needs to release memory - it releases a slab.</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Each slab consists of &gt;= 1 VM pages and a refcount.</p></li>
+<li><p>When the refcount drops to 0, the slab is relinquished.</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>Therefore,</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>Reclaiming memory becomes easy</p></li>
+<li><p>Allocating and freeing memory become trivial</p></li>
+<li><p>Minimal external fragmentation</p></li>
+<li><p>Minimal internal fragmentation</p></li>
+</ol>
+</div></blockquote>
+<p>Each slab is associated with a <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kmem_slab</span></code> which manages the inner buffers (or objects). Each buffer is represented as <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kmem_bufctl</span></code>, which store the freelist linkage, buffer address and the containing slab.</p>
+<a class="reference internal image-reference" href="_images/slab.png"><img alt="_images/slab.png" class="align-center" src="_images/slab.png" style="width: 307.5px; height: 285.5px;" /></a>
+<ul>
+<li><p>Slab coloring</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Each slab size could be expressed as: <code class="docutils literal notranslate"><span class="pre">sizeof(aligned_object)</span> <span class="pre">*</span> <span class="pre">number_of_objects</span> <span class="pre">+</span> <span class="pre">number_of_unused_bytes</span> <span class="pre">+</span> <span class="pre">sizeof(slab_descriptor)</span></code></p></li>
+<li><p>Slab coloring is a scheme that attempts to have objects in different slabs use different lines in the cache. By placing objects at a different starting offset within the slab, objects will likely use different lines in the CPU cache, which helps ensure that objects from the same slab cache will be unlikely to flush each other.</p></li>
+<li><p>Slabs with differet colors store their first objects at different base offsets, while satisfying the alignment constraint</p></li>
+<li><p>The total number of colors equals <code class="docutils literal notranslate"><span class="pre">(number_of_unused_bytes</span> <span class="pre">/</span> <span class="pre">alignment)</span> <span class="pre">+</span> <span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">base_offset_inside_slab</span> <span class="pre">=</span> <span class="pre">color[i]</span> <span class="pre">+</span> <span class="pre">sizeof(slab_descriptor)</span></code></p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>In Linux <code class="docutils literal notranslate"><span class="pre">base_offset_inside_slab</span></code> is the <a class="reference external" href="https://elixir.bootlin.com/linux/v4.6/source/include/linux/slab_def.h#L33">colour_off field</a> inside <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">kmem_cache</span></code>.</p>
+</div>
+</div>
+</div>
+</div>
+
+
+              </div>
+              
+        
+            
+
+
+
+<div class='prev-next-bottom'>
+    
+    <div id="prev">
+        <a class="left-prev" href="LittleBookOfSemaphore.html" title="previous page">
+            <i class="prevnext-label fas fa-angle-left"></i>
+            <div class="prevnext-info">
+                <p class="prevnext-label">previous</p>
+                <p class="prevnext-title">The Little Book Of Semaphores</p>
+            </div>
+        </a>
+    </div>
+
+</div>
+        
+        </div>
+    </div>
+    <footer class="footer">
+    <div class="container">
+      <p>
+        
+          By Kristiyan Stoimenov<br/>
+        
+            &copy; Copyright 2021, Kristiyan Stoimenov.<br/>
+      </p>
+    </div>
+  </footer>
+</main>
+
+
+      </div>
+    </div>
+  
+  <script src="_static/js/index.1c5a1a01449ed65a7b51.js"></script>
+
+  
+  </body>
+</html>
